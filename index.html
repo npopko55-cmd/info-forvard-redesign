@@ -1800,8 +1800,29 @@ if (form) {
     }
 
     if (valid) {
-      form.style.display = 'none';
-      document.getElementById('formSuccess').classList.add('show');
+      const submitBtn = form.querySelector('.btn-submit');
+      submitBtn.querySelector('span').textContent = 'ОТПРАВКА...';
+      submitBtn.disabled = true;
+
+      const payload = {
+        name: name.value.trim(),
+        phone: phone.value.trim(),
+        service: form.querySelector('select[name="service"]').value || 'Не выбрана',
+        message: form.querySelector('textarea[name="message"]').value.trim() || '—'
+      };
+
+      fetch('https://script.google.com/macros/s/AKfycbyJM9mq8Qze3gkJSMIF57nvBR60lHKMksAXm4EVN12dBQbXt_deS9ZWGLcCt-GSEa3j1g/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(() => {
+        form.style.display = 'none';
+        document.getElementById('formSuccess').classList.add('show');
+      }).catch(() => {
+        form.style.display = 'none';
+        document.getElementById('formSuccess').classList.add('show');
+      });
     }
   });
 
